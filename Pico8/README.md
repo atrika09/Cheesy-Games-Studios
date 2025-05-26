@@ -1,2 +1,0 @@
-# BaliAttiPico8
-Banana?
