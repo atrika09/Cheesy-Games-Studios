@@ -1,1 +1,122 @@
+pico-8 cartridge // http://www.pico-8.com
+version 43
+__lua__
+function _init()
+ px=60
+ py=100
+ pxa=0
+ pya=0
+ grav="still"
+ state="title"
+end
 
+function _update()
+	if state=="title" then
+		title_update()
+	elseif state=="game" then
+	 game_update()
+	end
+end
+
+function _draw()
+	if state=="title" then
+		title_draw()
+	elseif state=="game" then
+	 game_draw()
+	end
+end
+-->8
+--update
+
+function title_update()
+ if btnp(5) then
+  state="game"
+ end
+end
+
+function game_update()
+	--button check
+ if btn(0) then
+  pxa-=1
+ end
+ if btn(1) then
+  pxa+=1
+ end
+ if btn(2) and grav=="still" then
+ 	pya=-15
+ 	grav="jump"
+ end
+ --accel check
+ if pxa<=-3 then
+ 	pxa=-3
+ end
+ if pxa>=3 then
+ 	pxa=3
+ end
+ if not btn(0) and pxa<0 then
+  pxa*=0.7
+  if pxa>=-0.1 then
+   pxa=0
+  end
+ end
+ if not btn(1) and pxa>0 then
+  pxa*=0.7
+  if pxa<=0.1 then
+   pxa=0
+  end
+ end
+ -- gravitation check
+ if grav=="jump" then
+  pya*=0.7
+  if pya>=-1 then
+   pya=-0.5
+   grav="fall"
+  end
+ elseif grav=="fall" then
+ 	if pya<0 then
+ 	 pya+=1
+ 	else
+ 		pya*=2
+ 	end
+ 	if pya>=7 then
+ 	 pya=7
+ 	end
+ end
+ --moving player
+ px+=pxa
+ py+=pya
+	if py>100 then
+	 py=100
+	 grav="still"
+	 pya=0
+	end
+end
+
+-->8
+--draw
+
+function title_draw()
+ cls(1)
+ print("banan project",40,50,7)
+ print("press ❎ to start",30,70,7)
+end
+
+function game_draw()
+	cls()
+ spr(1,px,py)
+ print(pxa)
+ print(pya)
+ print(px)
+ print(py)
+end
+__gfx__
+00000000111111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000188882810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700182222210000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000182222810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000182222810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700122222810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000182888810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000111111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+__sfx__
+0006000000600006000060000000000000000000000000000000000000000000000000000
